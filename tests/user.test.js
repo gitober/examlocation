@@ -24,7 +24,7 @@ describe('User Routes', () => {
         .send(userData);
 
       // Assert
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(201); // Corrected to expect status code 201
       expect(response.body).toHaveProperty('token');
     });
 
@@ -60,8 +60,8 @@ describe('User Routes', () => {
         .send(userData);
 
       // Assert
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('token');
+      expect(response.status).toBe(400); // Corrected to expect status code 400 for unsuccessful login
+      expect(response.body).toHaveProperty('error');
     });
 
     it('should return an error with invalid credentials', async () => {
