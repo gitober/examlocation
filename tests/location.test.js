@@ -4,17 +4,19 @@ const supertest = require("supertest");
 const app = require("../app");
 const api = supertest(app);
 const User = require("../models/userModel");
-const Book = require("../models/bookModel");
-const books = [
+const Location = require("../models/locationModel");
+const locations = [
   {
-    "title": "Sample title",
-    "author": "Sample author",
-    "genre": "Sample genre"
+    "name": "Central Park",
+    "address": "New York, NY",
+    "latitude": 40.785091,
+    "longitude": -73.968285
   },
   {
-    "title": "Sample title",
-    "author": "Sample author",
-    "genre": "Sample genre"
+    "name": "Central Park",
+    "address": "New York, NY",
+    "latitude": 40.785091,
+    "longitude": -73.968285
   }
 ];
 
@@ -28,70 +30,72 @@ beforeAll(async () => {
   token = result.body.token;
 });
 
-describe("Given there are initially some books saved", () => {
+describe("Given there are initially some locations saved", () => {
   beforeEach(async () => {
-    await Book.deleteMany({});
+    await Location.deleteMany({});
     await api
-      .post("/api/books")
+      .post("/api/locations")
       .set("Authorization", "bearer " + token)
-      .send(books[0])
-      .send(books[1]);
+      .send(locations[0])
+      .send(locations[1]);
   });
 
-  it("should return all books as JSON when GET /api/books is called", async () => {
+  it("should return all locations as JSON when GET /api/locations is called", async () => {
     await api
-      .get("/api/books")
+      .get("/api/locations")
       .set("Authorization", "bearer " + token)
       .expect(200)
       .expect("Content-Type", /application\/json/);
   });
 
-  it("should create one book when POST /api/books is called", async () => {
-    const newBook = {
-      title: "testtitle",
-      author: "testauthor",
-      genre: "testgenre",
+  it("should create one location when POST /api/locations is called", async () => {
+    const newLocation = {
+      name: "testname",
+      address: "testaddress",
+      laditude: "testladitude",
+      longitude: "testlongitude",
     };
     await api
-      .post("/api/books")
+      .post("/api/locations")
       .set("Authorization", "bearer " + token)
-      .send(newBook)
+      .send(newLocation)
       .expect(201);
   });
   
-  it("should return one book by ID when GET /api/books/:id is called", async () =>  {
-    const book = await Book.findOne();
+  it("should return one location by ID when GET /api/locations/:id is called", async () =>  {
+    const location = await Location.findOne();
     await api
-      .get("/api/books/" + book._id)
+      .get("/api/locations/" + location._id)
       .set("Authorization", "bearer " + token)
       .expect(200)
       .expect("Content-Type", /application\/json/);
   });
 
-  it("should update one book by ID when PUT /api/books/:id is called", async () => {
-    const book = await Book.findOne();
-    const updatedBook = {
-      title: "testtitle",
-      author: "testauthor",
-      genre: "testgenre",
+  it("should update one location by ID when PUT /api/locations/:id is called", async () => {
+    const location = await Location.findOne();
+    const updatedLocation = {
+      name: "testname",
+      address: "testaddress",
+      laditude: "testladitude",
+      longitude: "testlongitude",
     };
     await api
-      .put("/api/books/" + book._id)
+      .put("/api/locations/" + location._id)
       .set("Authorization", "bearer " + token)
-      .send(updatedBook)
+      .send(updatedLocation)
       .expect(200);
-    const updatedBookCheck = await Book.findById(book._id);
-    expect(updatedBookCheck.toJSON()).toEqual(expect.objectContaining(updatedBook));
+    const updatedLocationCheck = await Location.findById(location._id);
+    expect(updatedLocationCheck.toJSON()).toEqual(expect.objectContaining(updatedLocation));
   });
 
-  it("should delete one book by ID when DELETE /api/books/:id is called", async () => {
-    const book = await Book.findOne();
+  it("should delete one location by ID when DELETE /api/locations/:id is called", async () => {
+    const location = await Location.findOne();
     await api
-      .delete("/api/books/" + book._id)
+      .delete("/api/locations/" + location._id)
       .set("Authorization", "bearer " + token)
       .expect(200);
-    const bookCheck = await Book.findById(book._id);
-    expect(bookCheck).toBeNull();
+    const locationCheck = await Location.findById(location._id);
+    expect(locationCheck).toBeNull();
   });
  
 });
