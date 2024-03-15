@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const customMiddleware = require("./middleware/customMiddleware");
-const bookRouter = require("./routers/locationRouter");
+const locationRouter = require("./routers/locationRouter");
 const userRouter = require("./routers/userRouter");
 
 // express app
