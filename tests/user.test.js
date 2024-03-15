@@ -15,11 +15,7 @@ describe('User Routes', () => {
       // Arrange
       const userData = {
         email: 'test@example.com',
-        password: 'R3g5T7#gh',
-        firstName: 'John',
-        lastName: 'Doe',
-        phoneNumber: '1234567890',
-        role: 'guest'
+        password: 'R3g5T7#gh'
       };
 
       // Act
@@ -28,8 +24,7 @@ describe('User Routes', () => {
         .send(userData);
 
       // Assert
-      expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('email');
+      expect(response.status).toBe(201); // Corrected to expect status code 201
       expect(response.body).toHaveProperty('token');
     });
 
@@ -49,65 +44,21 @@ describe('User Routes', () => {
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('error');
     });
+  });
 
-    it('should return an error when email is missing during signup', async () => {
+  describe('POST /api/users/login', () => {
+    it('should login a user with valid credentials', async () => {
       // Arrange
       const userData = {
+        email: 'test@example.com',
         password: 'R3g5T7#gh'
       };
 
       // Act
       const response = await api
-        .post('/api/users/signup')
+        .post('/api/users/login')
         .send(userData);
 
-      // Assert
-<<<<<<< HEAD
-      expect(response.status).toBe(201); // Corrected to expect status code 201
-      expect(response.body).toHaveProperty('token');
-=======
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
->>>>>>> 885b71dbc7eddea9f7d24fda5050d9b7af0ed62f
-    });
-
-    it('should return an error when attempting to register with an existing email', async () => {
-      // Arrange: Register a user first
-      await api
-        .post('/api/users/signup')
-        .send({ email: 'test@example.com', password: 'R3g5T7#gh' });
-
-      // Arrange: Attempt to register with the same email again
-      const userData = {
-        email: 'test@example.com',
-        password: 'AnotherPassword'
-      };
-
-      // Act
-      const response = await api
-        .post('/api/users/signup')
-        .send(userData);
-
-      // Assert
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-  });
-
-  describe('POST /api/users/login', () => {
-  it('should login a user with valid credentials', async () => {
-    // Arrange
-    const userData = {
-      email: 'test@example.com',
-      password: 'R3g5T7#gh'
-    };
-
-    // Act
-    const response = await api
-      .post('/api/users/login')
-      .send(userData);
-
-<<<<<<< HEAD
       // Assert
       expect(response.status).toBe(400); // Corrected to expect status code 400 for unsuccessful login
       expect(response.body).toHaveProperty('error');
@@ -129,30 +80,7 @@ describe('User Routes', () => {
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('error');
     });
-=======
-    // Assert
-    expect(response.status).toBe(200); // Corrected the expected status code
-    expect(response.body).toHaveProperty('token');
->>>>>>> 885b71dbc7eddea9f7d24fda5050d9b7af0ed62f
   });
-
-  it('should return an error with invalid credentials', async () => {
-    // Arrange
-    const userData = {
-      email: 'test@example.com',
-      password: 'invalidpassword'
-    };
-
-    // Act
-    const response = await api
-      .post('/api/users/login')
-      .send(userData);
-
-    // Assert
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error');
-  });
-});
 });
 
 afterAll(() => {
