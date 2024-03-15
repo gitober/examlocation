@@ -21,19 +21,37 @@ const loginUser = async (req, res) => {
   }
 };
 
-// signup a user
 const signupUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, firstName, lastName, phoneNumber, role } = req.body;
 
   try {
-    const user = await User.signup(email, password);
+    // Check if email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
 
-    // create a token
+    // Create a new user
+    const user = new User({
+      email,
+      password,
+      firstName,
+      lastName,
+      phoneNumber,
+      role
+    });
+
+    // Save user to database
+    await user.save();
+
+    // Create a token
     const token = createToken(user._id);
 
-    res.status(200).json({ email, token });
+    // Respond with status code 201 (Created) and user's email and token
+    res.status(201).json({ email: user.email, token });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    // Handle errors
+    res.status(500).json({ error: error.message });
   }
 };
 
