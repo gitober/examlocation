@@ -1,84 +1,84 @@
 const mongoose = require('mongoose');
-const Book = require('../models/bookModel');
+const Location = require('../models/locationModel');
 
-// get all Books
-const getBooks = async (req, res) => {
+// get all Locations
+const getLocations = async (req, res) => {
   const user_id = req.user._id
 
   try {
-    const books = await Book.find({user_id}).sort({createdAt: -1})
-    res.status(200).json(books)
+    const locations = await location.find({user_id}).sort({createdAt: -1})
+    res.status(200).json(locations)
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
   }
 }
 
-// Add one Book
-const addBook = async (req, res) => {
-  const {title, author, genre} = req.body;
+// Add one Location
+const addLocation = async (req, res) => {
+  const {name, address, latitude, longitude} = req.body;
 
   try {
     const user_id = req.user._id;
-    const newBook = new Book({title, author, genre, user_id});
-    await newBook.save();
-    res.status(201).json(newBook);
+    const newLocation = new Location({name, address, latitude, longitude, user_id});
+    await newLocation.save();
+    res.status(201).json(newLocation);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
   }
 }
 
-// Get Book by ID
-const getBook = async (req, res) => {
+// Get Location by ID
+const getLocation = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({error: 'No such book'});
+      return res.status(404).json({error: 'No such location'});
   }
 
   try {
     const user_id = req.user._id;
-    const book = await Book.findById(id).where('user_id').equals(user_id);
-    if (!book) {
-      return res.status(404).json({ message: 'Book not found' });
+    const location = await Location.findById(id).where('user_id').equals(user_id);
+    if (!location) {
+      return res.status(404).json({ message: 'Location not found' });
     }
-    res.status(200).json(book);
+    res.status(200).json(location);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
   }
 }
 
-// Delete Book by ID
-const deleteBook = async (req, res) => {
+// Delete Location by ID
+const deleteLocation = async (req, res) => {
   const { id } = req.params;
   try {
     const user_id = req.user._id;
-    const book = await Book.findByIdAndDelete({ _id: id, user_id: user_id });
-    if (!book) {
-      return res.status(404).json({ message: 'Book not found' });
+    const location = await Location.findByIdAndDelete({ _id: id, user_id: user_id });
+    if (!location) {
+      return res.status(404).json({ message: 'Location not found' });
     }
-    res.status(200).json({ message: 'Book deleted successfully' });
+    res.status(200).json({ message: 'Location deleted successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
   }
 }
 
-// Update Book by ID
-const updateBook = async (req, res) => {
+// Update Location by ID
+const updateLocation = async (req, res) => {
   const { id } = req.params;
   try {
     const user_id = req.user._id;
-    const book = await Book.findOneAndUpdate(
+    const Location = await Location.findOneAndUpdate(
       { _id: id, user_id: user_id },
       { ...req.body },
       { new: true }
     );
-    if (!book) {
-      return res.status(404).json({ message: 'Book not found' });
+    if (!location) {
+      return res.status(404).json({ message: 'Location not found' });
     }
-    res.status(200).json(book);
+    res.status(200).json(location);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
@@ -86,9 +86,9 @@ const updateBook = async (req, res) => {
 }
 
 module.exports = {
-  getBooks,
-  addBook,
-  getBook,
-  deleteBook,
-  updateBook,
+  getLocations,
+  addLocation,
+  getLocation,
+  deleteLocation,
+  updateLocation,
 };
