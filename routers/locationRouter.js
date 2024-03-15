@@ -1,24 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { getBooks, addBook, getBook, deleteBook, updateBook } = require('../controllers/bookController');
+const { getLocations, addLocation, getLocation, deleteLocation, updateLocation } = require('../controllers/locationController');
 const requireAuth = require('../middleware/requireAuth')
 
-// require auth for all workout routes
+// require auth for all location routes
 router.use(requireAuth)
 
-// GET all Books
-router.get('/', getBooks);
+// GET all Locations
+router.get('/', getLocations);
 
-// POST a new Book
-router.post('/', addBook);
+// POST a new Location
+router.post('/', addLocation);
 
-// GET a single Book
-router.get('/:id', getBook);
+// GET a single Location
+router.get('/:id', getLocation);
 
-// DELETE a Book
-router.delete('/:id', deleteBook);
+// DELETE a Location
+router.delete('/:id', deleteLocation);
 
-// Update Book using PUT
-router.put('/:id', updateBook);
+// Update Location using PUT
+router.put('/:id', updateLocation);
 
 module.exports = router;
